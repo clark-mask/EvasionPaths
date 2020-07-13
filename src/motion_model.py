@@ -109,7 +109,7 @@ class RunAndTumble(BilliardMotion):
         return super().update_point(pt, index)
 
 
-class Viscek(BilliardMotion):
+class Vicsek(BilliardMotion):
 
     def __init__(self, dt, boundary: Boundary, n_int_sensors, sensing_radius):
         super().__init__(dt=0, boundary=boundary, vel=1, n_int_sensors=n_int_sensors)
@@ -121,7 +121,7 @@ class Viscek(BilliardMotion):
         return norm(array(pt1) - array(pt2))
 
     def eta(self):
-        return (pi / 12) * random.uniform(-1, 1)
+        return (pi / 4) * random.uniform(-1, 1)
 
     def update_points(self, old_points: list, dt: float) -> list:
         self.dt = dt
@@ -178,7 +178,7 @@ class Dorsogna(MotionModel):
     # repulsion term being subtracted from the attraction term)
     # The coefficients of the repulsion and attraction terms determine the strength of repulsion and attraction,
     # respectively, at a given distance.
-    # /f$ /sum{C_re^{-|x_i - x_j|/L_r} - C_ae^{-|x_i - x_j|/L_a}} /f$
+    # \begin{equation} \sum{C_re^{-|x_i - x_j|/L_r} - C_ae^{-|x_i - x_j|/L_a}} \end{equation}
     def gradient(self, xs, ys):
         gradUx, gradUy = [0.0] * self.n_sensors, [0.0] * self.n_sensors
 
@@ -197,7 +197,7 @@ class Dorsogna(MotionModel):
 
     ## This computes dx/dt, dy/dt, dvx/dt, dvy/dt which are later solved to compute the next set of x,y coordinates.
     # The solve_ivp function in scipy.integrate requires that the equations to be solved are given in an array formatted
-    # as [dx/dt, dy/dt, dvx/dt, dvy/dt]. It returns the array [x, y, vx, vy]
+    # as [dx/dt | dy/dt | dvx/dt | dvy/dt].
     def time_derivative(self, _, state):
         # ode solver gives us np array in the form [xvals | yvals | vxvals | vyvals]
         # split into individual np array
